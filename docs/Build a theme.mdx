@@ -1,0 +1,61 @@
+---
+category: How to
+---
+
+import Preview from '../preview'
+
+Getting started into building a real theme right now [I wanna open](#sandbox/with-rtl-support-and-anchor-right)
+
+```typescript
+{
+  type: 'marquee',
+  props: {
+    bgcolor: '#ffa7c4',
+    children: 'hi',
+  },
+  key: null,
+  ref: null,
+  $$typeof: Symbol.for('react.element'), // 🧐 Who dis
+}
+```
+
+Now you cant get the real prop from A
+
+<Preview title="Example">
+  {({ log }) => (
+    <>
+      <h1>qwqweqweqweqweewq</h1>
+      <button onClick={log.as('onClick')}>qweqweqweqwqweqweqw!</button>
+      <h1>qwewq</h1>
+    </>
+  )}
+</Preview>
+
+<Preview title="With dates in it">
+  {({ log }) => (
+    <>
+      <button>Foo</button>
+      <button>Baar</button>
+    </>
+  )}
+</Preview>
+
+<Preview title="with RTL support (and anchor right)">
+  {({ log }) => (
+    <>
+      <h1>Final 3 RTTRL</h1>
+      <table>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>2</td>
+          </tr>
+          <tr>
+            <td>a</td>
+            <td>b</td>
+          </tr>
+        </tbody>
+      </table>
+    </>
+  )}
+</Preview>

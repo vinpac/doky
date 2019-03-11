@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext"
+  },
+  "exclude": ["node_modules", ".next", ".dist"],
+  "include": ["src/client"]
+}

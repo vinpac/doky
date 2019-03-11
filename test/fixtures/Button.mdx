@@ -1,0 +1,134 @@
+---
+title: Button
+description: The Button Component
+---
+
+import Button from './Button'
+import Preview, { setPreviewHead as batata } from '../../preview'
+import InfoTable from '../../info-table'
+
+<InfoTable
+  Import={<code>~/components/Button</code>}
+  Path="src/components/Button/Button.tsx"
+/>
+
+## Usage
+
+```typescript
+import Button from '~/components/Buttton'
+```
+
+Using this library components can fire public and private events:
+
+- Public events should be used by component consumers to track how customers are using their application.
+- Private events should be used by component authors to monitor how customers are using their components.
+
+Components that want to fire private events and support public events for consumers will need to be wrapped using the withAnalytics higher-order component. This will provide the wrapped component with several props that should be filtered out using the cleanProps function before passing to any children.
+
+As a general guideline component authors should follow the 'Integrating Components' example to add both public and private events. For these components consumers should only need to set the analyticsId for public events to fire. If a consumer finds a component that does not have analytics they can call fireAnalyticsEvent in their component or look at the 'Wrapping Components' example.
+
+If your component needs to always fire public events then you can set a default analyticsId, see the 'Setting Default Analytics Props' example. Please be aware that consumers can still override this default.
+
+AnalyticsDecorator can be used to extend the event data of child components. It can be configured to only intercept certain events based on event name and/or type (public or private). Decorators can also be nested within one another enabling different combinations of filtering and extending. With this events will continue to bubble up to the next decorator in the hierarchy.
+
+AnalyticsListener is used to capture child events for processing (e.g. sending to a web service). Similarly to AnalyticsDecorator it has options for filtering (event name and type) and can be nested within other listeners.
+
+If you are using a state manager like Redux and need to fire events in the stores with the decorated analyticsData then you can use getParentAnalyticsData(analyticsId). This function will traverse the hierarchy for AnalyticsDecorators and build the extended analyticsData that would have been generated based on all the filtering logic. This parentAnalyticsData can then be passed to the stores as a property on the action.
+
+Open up the browser console to see the analytic events in the examples.
+
+### SaveButton.js
+
+```typescript
+import Button from '@atlaskit/button'
+
+const SaveButton = ({ onClick }) => (
+  <Button
+    onClick={(e, analyticsEvent) => {
+      analyticsEvent.fire()
+      if (onClick) {
+        onClick(e)
+      }
+    }}
+  >
+    Save
+  </Button>
+)
+```
+
+This is a good opportunity to add more information to the analytics event before firing.
+
+The next step is to set up a listener which receives the events.
+
+<Preview title="Your appearence options">
+  <Button />
+</Preview>
+
+```typescript
+import { AnalyticsListener } from '@atlaskit/analytics-next'
+import SaveButton from './SaveButton'
+
+const sendAnalytics = analytic => console.log(analytic)
+
+const App = () => (
+  <AnalyticsListener onEvent={sendAnalytics}>
+    <SaveButton />
+  </AnalyticsListener>
+)
+```
+
+## Instrumented Components
+
+This table shows all the component interactions that are instrumented. All events additionally include packageName and packageVersion in their payloads.
+
+| Package                      | Component                             | Action Subject    | Prop                | Action       |
+| ---------------------------- | ------------------------------------- | ----------------- | ------------------- | ------------ |
+| @atlaskit/avatar             | Avatar                                | avatar            | onClick             | clicked      |
+| @atlaskit/blanket            | Blanket                               | blanket           | onBlanketClicked    | clicked      |
+| @atlaskit/breadcrumbs        | BreadcrumbsStateless, Breadcrumbs     | breadcrumbs       | onExpand            | expanded     |
+| BreadcrumbsItem              | breadcrumbsItem                       | onClick           | clicked             |
+| @atlaskit/button             | Button                                | button            | onClick             | clicked      |
+| @atlaskit/comment            | CommentAction                         | commentAction     | onClick             | clicked      |
+| CommentAuthor                | commentAuthor                         | onClick           | clicked             |
+| CommentEdited                | commentEdited                         | onClick           | clicked             |
+| CommentTime                  | commentTime                           | onClick           | clicked             |
+| @atlaskit/calendar           | Calendar                              | calendarDate      | onChange            | changed      |
+| onSelect                     | selected                              |
+| @atlaskit/checkbox           | Checkbox                              | checkbox          | onChange            | changed      |
+| @atlaskit/datetime-picker    | DatePicker                            | datePicker        | onChange            | selectedDate |
+| TimePicker                   | timePicker                            | onChange          | selectedTime        |
+| DateTimePicker               | dateTimePicker                        | onChange          | changed             |
+| @atlaskit/drawer             | Drawer                                | drawer            | onClose             | dismissed    |
+| @atlaskit/dropdown-menu      | DropdownMenuStateless, DropdownMenu   | dropdownMenu      | onOpenChange        | toggled      |
+| @atlaskit/droplist           | Droplist                              | droplist          | onOpenChange        | toggled      |
+| DroplistItem                 | droplistItem                          | onActivate        | selected            |
+| @atlaskit/dynamic-table      | DynamicTable                          | dynamicTable      | onSort              | sorted       |
+| onRankEnd                    | ranked                                |
+| pageNumber                   | onSetPage                             | changed           |
+| @atlaskit/field-radio-group  | AkFieldRadioGroup, RadioGroup         | radioItem         | onRadioChange       | selected     |
+| @atlaskit/field-text         | FieldTextStateless, FieldText         | textField         | onBlur              | blurred      |
+| onFocus                      | focused                               |
+| @atlaskit/field-text-area    | FieldTextAreaStateless, FieldTextArea | textArea          | onBlur              | blurred      |
+| onFocus                      | focused                               |
+| @atlaskit/flag               | Flag                                  | flag              | onBlur              | blurred      |
+| onDismissed                  | dismissed                             |
+| onFocus                      | focused                               |
+| @atlaskit/inline-dialog      | InlineDialog                          | inlineDialog      | onClose             | closed       |
+| @atlaskit/inline-edit        | InlineEditStateless, InlineEdit       | inlineEdit        | onCancel            | canceled     |
+| onConfirm                    | confirmed                             |
+| onEditRequested              | edited                                |
+| @atlaskit/modal-dialog       | ModalDialog                           | modalDialog       | onClose             | closed       |
+| @atlaskit/navigation         | Navigation                            | navigation        | onResize            | resized      |
+| onResizeStart                | resizeStarted                         |
+| NavigationItem               | navigationItem                        | onClick           | clicked             |
+| @atlaskit/onboarding         | Spotlight                             | spotlight         | targetOnClick       | clicked      |
+| @atlaskit/pagination         | Pagination                            | pageNumber        | onChange            | changed      |
+| @atlaskit/progress-indicator | ProgressDots                          | progressIndicator | onSelect            | clicked      |
+| @atlaskit/radio              | Radio                                 | radio             | onChange            | changed      |
+| @atlaskit/select             | Select                                | option            | onChange            | changed      |
+| @atlaskit/table-tree         | Row                                   | tableTree         | onExpand            | expanded     |
+| onCollapse                   | collapsed                             |
+| @atlaskit/tabs               | Tabs                                  | tab               | onSelect            | clicked      |
+| @atlaskit/tag                | Tag                                   | tag               | onAfterRemoveAction | removed      |
+| @atlaskit/toggle             | ToggleStateless, Toggle               | toggle            | onBlur              | blurred      |
+| @atlaskit/tooltip            | Tooltip                               | tooltip           | onMouseOver         | displayed    |
